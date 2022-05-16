@@ -9,6 +9,7 @@ import utilities as ut
 import numpy as np
 import os
 import re
+from scipy.signal import find_peaks
 
 app = Dash(__name__)
 
@@ -109,15 +110,18 @@ def update_figure(value, algorithm_checkmarks):
     print("current checked checkmarks are: ", algorithm_checkmarks)
     ts = list_of_subjects[int(value)-1].subject_data
     #SpO2
-    fig0 = px.line(ts, x="Time (s)", y = data_names[0])
+    fig0 = px.line(ts, x="Time (s)", y = data_names[0], markevery= list_of_subjects[int(value)-1].max_spO2))
     # Blood Flow
     fig1 = px.line(ts, x="Time (s)", y = data_names[1])
     # Blood Temperature
     fig2 = px.line(ts, x="Time (s)", y = data_names[2])
     
-    ### Aufgabe 2: Min / Max ###
 
+    ### Aufgabe 2: Min / Max ###
+    
     return fig0, fig1, fig2 
+
+    
 
 
 ## Blodflow Simple Moving Average Update
