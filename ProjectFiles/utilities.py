@@ -37,16 +37,15 @@ class Subject():
 
 ### Aufgabe 2: Datenverarbeitung ###
 
-
-
-
-
 def calculate_CMA(df,n):
     pass
     
 
 def calculate_SMA(df,n):
-    pass
+    bloodflow = df["Blood Flow (ml/s)"]
+    bloodflow['SMA'] = bloodflow["Blood Flow (ml/s)"].rolling(n).mean()
+    return bloodflow
+ 
 # %%
 
 
