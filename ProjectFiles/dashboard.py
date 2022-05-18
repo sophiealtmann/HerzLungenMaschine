@@ -155,6 +155,10 @@ def bloodflow_figure(value, bloodflow_checkmarks):
     bf = list_of_subjects[int(value)-1].subject_data
     fig3 = px.line(bf, x="Time (s)", y="Blood Flow (ml/s)")
 
+    if 'SMA' in str(bloodflow_checkmarks):
+        bloodflow = ut.calculate_SMA(bf,30)
+        fig3.add_trace(go.Line(bloodflow,name="SMA"))
+
     return fig3
 
 if __name__ == '__main__':
