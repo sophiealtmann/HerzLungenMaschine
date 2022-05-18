@@ -1,4 +1,6 @@
+
 from cmath import nan
+from ctypes.wintypes import tagSIZE
 from tempfile import SpooledTemporaryFile
 import dash
 from dash import Dash, html, dcc, Output, Input, dash_table
@@ -110,7 +112,7 @@ def update_figure(value, algorithm_checkmarks):
     print("current checked checkmarks are: ", algorithm_checkmarks)
     ts = list_of_subjects[int(value)-1].subject_data
     #SpO2
-    fig0 = px.line(ts, x="Time (s)", y = data_names[0], markevery= list_of_subjects[int(value)-1].max_spO2))
+    fig0 = px.line(ts, x="Time (s)", y = data_names[0])
     # Blood Flow
     fig1 = px.line(ts, x="Time (s)", y = data_names[1])
     # Blood Temperature
@@ -118,10 +120,23 @@ def update_figure(value, algorithm_checkmarks):
     
 
     ### Aufgabe 2: Min / Max ###
+    mmspO2= list_of_subjects[int(value)-1].subject_data["SpO2 (%)"].agg(['min','idxmin','max','idxmax'])
+    mmblood_flow= list_of_subjects[int(value)-1].subject_data["Blood Flow (ml/s)"].agg(['min','idxmin','max','idxmax'])
+    mmtemp= list_of_subjects[int(value)-1].subject_data["Temp (C)"].agg(['min','idxmin','max','idxmax'])
     
+    #fig0= px.scatter(x=[mmspO2[3]],y=[mmspO2[2]])
+    #return fig0, fig1, fig2 
+    if "max" in str(algorithm_checkmarks):
+        fig0.add_trace(go.Scatter(x=[mmspO2[3]],y=[mmspO2[2]],marker_size=10))
+        fig1.add_trace(go.Scatter(x=[mmblood_flow[3]],y=[mmblood_flow[2]],marker_size=10))
+        fig2.add_trace(go.Scatter(x=[mmtemp[3]],y=[mmtemp[2]],marker_size=10))
+    
+    if "min" in str(algorithm_checkmarks):
+        fig0.add_trace(go.Scatter(x=[mmspO2[1]],y=[mmspO2[0]],marker_size=10))
+        fig1.add_trace(go.Scatter(x=[mmblood_flow[1]],y=[mmblood_flow[0]],marker_size=10))
+        fig2.add_trace(go.Scatter(x=[mmtemp[1]],y=[mmtemp[0]],marker_size=10))
     return fig0, fig1, fig2 
-
-    
+ 
 
 
 ## Blodflow Simple Moving Average Update
@@ -138,8 +153,8 @@ def bloodflow_figure(value, bloodflow_checkmarks):
     bf = list_of_subjects[int(value)-1].subject_data
     fig3 = px.line(bf, x="Time (s)", y="Blood Flow (ml/s)")
 
-
     return fig3
 
 if __name__ == '__main__':
     app.run_server(debug=True)
+# %%
