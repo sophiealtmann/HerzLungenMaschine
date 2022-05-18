@@ -124,17 +124,19 @@ def update_figure(value, algorithm_checkmarks):
     mmblood_flow= list_of_subjects[int(value)-1].subject_data["Blood Flow (ml/s)"].agg(['min','idxmin','max','idxmax'])
     mmtemp= list_of_subjects[int(value)-1].subject_data["Temp (C)"].agg(['min','idxmin','max','idxmax'])
     
-    #fig0= px.scatter(x=[mmspO2[3]],y=[mmspO2[2]])
-    #return fig0, fig1, fig2 
-    if "max" in str(algorithm_checkmarks):
-        fig0.add_trace(go.Scatter(x=[mmspO2[3]],y=[mmspO2[2]],marker_size=10))
-        fig1.add_trace(go.Scatter(x=[mmblood_flow[3]],y=[mmblood_flow[2]],marker_size=10))
-        fig2.add_trace(go.Scatter(x=[mmtemp[3]],y=[mmtemp[2]],marker_size=10))
     
+    # Max hinzugefügt
+    if "max" in str(algorithm_checkmarks):
+        fig0.add_trace(go.Scatter(x=[mmspO2[3]],y=[mmspO2[2]],marker_size=10, name = 'max'))
+        fig1.add_trace(go.Scatter(x=[mmblood_flow[3]],y=[mmblood_flow[2]],marker_size=10, name = 'max'))
+        fig2.add_trace(go.Scatter(x=[mmtemp[3]],y=[mmtemp[2]],marker_size=10, name = 'max'))
+    
+    # Min hinzugefügt
     if "min" in str(algorithm_checkmarks):
-        fig0.add_trace(go.Scatter(x=[mmspO2[1]],y=[mmspO2[0]],marker_size=10))
-        fig1.add_trace(go.Scatter(x=[mmblood_flow[1]],y=[mmblood_flow[0]],marker_size=10))
-        fig2.add_trace(go.Scatter(x=[mmtemp[1]],y=[mmtemp[0]],marker_size=10))
+        fig0.add_trace(go.Scatter(x=[mmspO2[1]],y=[mmspO2[0]],marker_size=10, name = 'min'))
+        fig1.add_trace(go.Scatter(x=[mmblood_flow[1]],y=[mmblood_flow[0]],marker_size=10, name = 'min'))
+        fig2.add_trace(go.Scatter(x=[mmtemp[1]],y=[mmtemp[0]],marker_size=10, name = 'min'))
+    
     return fig0, fig1, fig2 
  
 
