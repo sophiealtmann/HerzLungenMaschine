@@ -156,12 +156,12 @@ def bloodflow_figure(value, bloodflow_checkmarks):
     fig3 = px.line(bf, x="Time (s)", y="Blood Flow (ml/s)")
 
     if 'SMA' in str(bloodflow_checkmarks):
-        bloodflow = ut.calculate_SMA(bf,30)
-        fig3.add_trace(go.Line(bloodflow,name="SMA"))
+        bloodflow = ut.calculate_SMA(bf,5)
+        fig3.add_trace(go.Line(y=bloodflow["SMA"],name="SMA"))
     
     if 'CMA' in str(bloodflow_checkmarks):
-        bloodflow = ut.calculate_CMA(bf,30)
-        fig3.add_trace(go.Line(bloodflow,name="CMA"))
+        bloodflow = ut.calculate_CMA(bf)
+        fig3.add_trace(go.Line(y=bloodflow["CMA"],name="CMA"))
 
     return fig3
    
