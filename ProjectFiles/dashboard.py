@@ -158,8 +158,13 @@ def bloodflow_figure(value, bloodflow_checkmarks):
     if 'SMA' in str(bloodflow_checkmarks):
         bloodflow = ut.calculate_SMA(bf,30)
         fig3.add_trace(go.Line(bloodflow,name="SMA"))
+    
+    if 'CMA' in str(bloodflow_checkmarks):
+        bloodflow = ut.calculate_CMA(bf,30)
+        fig3.add_trace(go.Line(bloodflow,name="CMA"))
 
     return fig3
+   
 
 if __name__ == '__main__':
     app.run_server(debug=True)
