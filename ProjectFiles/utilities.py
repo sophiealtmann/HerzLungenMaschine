@@ -47,9 +47,13 @@ def calculate_CMA(df):
 def calculate_SMA(df,n):
     bloodflow = df["Blood Flow (ml/s)"].to_frame()
     bloodflow['SMA'] = bloodflow["Blood Flow (ml/s)"].rolling(n).mean()
-   
+
     return bloodflow
- 
+
+def calculate_mean(df):
+    mean=df["Blood Flow (ml/s)"].mean()
+    
+    return mean
 # %%
 
 
