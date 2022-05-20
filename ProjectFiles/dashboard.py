@@ -40,7 +40,7 @@ for i in range(number_of_subjects):
 
 data_names = ["SpO2 (%)", "Blood Flow (ml/s)","Temp (C)"]
 algorithm_names = ['min','max']
-blood_flow_functions = ['CMA','SMA','Show Limits']
+blood_flow_functions = ['CMA','SMA','Mittelwert','Show Limits']
 
 
 fig0= go.Figure()
@@ -154,6 +154,14 @@ def bloodflow_figure(value, bloodflow_checkmarks):
     print(bloodflow_checkmarks)
     bf = list_of_subjects[int(value)-1].subject_data
     fig3 = px.line(bf, x="Time (s)", y="Blood Flow (ml/s)")
+    
+    # SMA ist sinnvoll bei Signalen die mit der Zeit zusammenhängen. 
+    # Weiters ist er bei Signalen sinnvoll, bei denen häufig unerwünschte Ausreißer vorkommen.
+    # Er ist ungeeignet, wennn es darum geht ein Signal detailreich aufzuzeichnen.
+    # Weiters ist er ungeeignet, wenn Lücken im Datensatz vorhanden sind, da diese die Werte verfälschen.
+    
+    # Der Wert n gibt das Datenfenster an, über das der Moving Average berechnet wird.
+    # Die Kurve verliert an Details, je höher der Wert für n ist.
 
     if 'SMA' in str(bloodflow_checkmarks):
         bloodflow = ut.calculate_SMA(bf,5)
@@ -162,6 +170,15 @@ def bloodflow_figure(value, bloodflow_checkmarks):
     if 'CMA' in str(bloodflow_checkmarks):
         bloodflow = ut.calculate_CMA(bf)
         fig3.add_trace(go.Line(y=bloodflow["CMA"],name="CMA"))
+    
+    if 'Mittelwert' in str(bloodflow_checkmarks):
+        mean = ut.calculate_mean(bf)
+        fig3.add_hline(y=mean, line_dash="dot",annotation_text="Mittelwert: "+str(round(mean,2))+ " ml/s")
+
+    if 'Show Limits' in str(bloodflow_checkmarks):
+        mean = ut.calculate_mean(bf)
+        fig3.add_hrect(y0=mean*1.15, y1=mean*0.8, annotation_text="15% Limit", fillcolor="green", opacity=0.25, line_width=0 )
+
 
     return fig3
    
