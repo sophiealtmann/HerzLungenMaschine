@@ -15,6 +15,11 @@ from scipy.signal import find_peaks
 
 app = Dash(__name__)
 
+colors = {
+    'background': ' #add8e6',
+    'text': ' #00008B',
+    "dropdown": "#30D5C8"
+}
 
 list_of_subjects = []
 subj_numbers = []
@@ -54,20 +59,20 @@ fig2 = px.line(df, x="Time (s)", y = "Temp (C)")
 fig3 = px.line(df, x="Time (s)", y = "Blood Flow (ml/s)")
 
 app.layout = html.Div(children=[
-    html.H1(children='Cardiopulmonary Bypass Dashboard'),
+    html.H1(children='Cardiopulmonary Bypass Dashboard', style={"textAlign" : "center", 'color': colors['text']}),
 
-    html.Div(children='''
+    html.Div( children='''
         Hier könnten Informationen zum Patienten stehen....
     '''),
 
-    dcc.Checklist(
+    dcc.Checklist(style={'backgroundColor': colors['background']},
     id= 'checklist-algo',
     options=algorithm_names,
     inline=False
     ),
 
     html.Div([
-        dcc.Dropdown(options = subj_numbers, placeholder='Select a subject', value='1', id='subject-dropdown'),
+        dcc.Dropdown(options = subj_numbers, placeholder='Select a subject', value='1', id='subject-dropdown', style={'backgroundColor': colors['dropdown']}),
     html.Div(id='dd-output-container')
     ],
         style={"width": "15%"}
@@ -87,7 +92,7 @@ app.layout = html.Div(children=[
         figure=fig2
     ),
 
-    dcc.Checklist(
+    dcc.Checklist(style={'backgroundColor': colors['background']},
         id= 'checklist-bloodflow',
         options=blood_flow_functions,
         inline=False
