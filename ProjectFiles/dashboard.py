@@ -8,6 +8,7 @@ from dash import Dash, html, dcc, Output, Input, dash_table
 import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
+from pytz import UTC
 import utilities as ut
 import numpy as np
 import os
@@ -178,21 +179,20 @@ def bloodflow_figure(value, bloodflow_checkmarks):
     if 'Show Limits' in str(bloodflow_checkmarks):
         mean = ut.calculate_mean(bf)
         fig3.add_hrect(y0=mean*1.15, y1=mean*0.85, annotation_text="15% Limit", fillcolor="green", opacity=0.25, line_width=0 )
-
+    
+    if 'SMA' in str(bloodflow_checkmarks):                                    
+        sma=ut.calculate_SMA(bf,3)          # n=3 da so Ausreißer die kürzer als 3 sec sind geglättet werden.
+        mean=ut.calculate_mean(bf)  
+        high= mean*1.15
+        low = mean*0.85
+            
+        high_and_low = sma[(sma['SMA'] > high) | (sma['SMA'] < low)] 
+        legend = "ACHTUNG! Es wurden für " + str(high_and_low['SMA'].count()) +'s kritische Werte aufgezeichnet!'
+        fig3.add_trace(go.Scatter(name = legend, y = high_and_low['SMA'], mode = "markers", marker_color='red'))
 
     return fig3
 
-def alarm(value): 
-    bf = list_of_subjects[int(value)-1].subject_data 
-    sma=ut.calculate_SMA(bf,3)
-    mean=ut.calculate_mean(bf)
-    UpperLimit = 1.15 * mean
-    LowerLimit= 0.85 * mean
-    high_or_low = bf[(bf['SMA'] > UpperLimit) | (bf['SMA'] < LowerLimit)] 
-    
-    LegendName = "Dauer Kritischer Werte: " + str(high_or_low['SMA'].count()) +'s'
-    textfeld= html.Div( children= str(LegendName))
-    return textfeld
+
 
 if __name__ == '__main__':
     app.run_server(debug=True)
