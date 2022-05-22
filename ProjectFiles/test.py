@@ -18,7 +18,5 @@ for file in os.listdir(folder_input_data):
         print(file_name)
         list_of_subjects.append(ut.Subject(file_name))
 
-CMA = ut.calculate_CMA(list_of_subjects[0].subject_data["Blood Flow (ml/s)"],30)
-print (CMA)
 
 # %%

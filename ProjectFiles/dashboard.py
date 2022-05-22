@@ -1,4 +1,5 @@
 
+#%%
 from cmath import nan
 from ctypes.wintypes import tagSIZE
 from tempfile import SpooledTemporaryFile
@@ -159,34 +160,39 @@ def bloodflow_figure(value, bloodflow_checkmarks):
     print(bloodflow_checkmarks)
     bf = list_of_subjects[int(value)-1].subject_data
     fig3 = px.line(bf, x="Time (s)", y="Blood Flow (ml/s)")
-    
-    # SMA ist sinnvoll bei Signalen die mit der Zeit zusammenhängen. 
-    # Weiters ist er bei Signalen sinnvoll, bei denen häufig unerwünschte Ausreißer vorkommen.
-    # Er ist ungeeignet, wennn es darum geht ein Signal detailreich aufzuzeichnen.
-    # Weiters ist er ungeeignet, wenn Lücken im Datensatz vorhanden sind, da diese die Werte verfälschen.
-    
-    # Der Wert n gibt das Datenfenster an, über das der Moving Average berechnet wird.
-    # Die Kurve verliert an Details, je höher der Wert für n ist.
 
     if 'SMA' in str(bloodflow_checkmarks):
-        bloodflow = ut.calculate_SMA(bf,5)
+        global bloodflow 
+        bloodflow = ut.calculate_SMA(bf,3)
         fig3.add_trace(go.Line(y=bloodflow["SMA"],name="SMA"))
     
     if 'CMA' in str(bloodflow_checkmarks):
-        bloodflow = ut.calculate_CMA(bf)
-        fig3.add_trace(go.Line(y=bloodflow["CMA"],name="CMA"))
-    
+        bloodflow1 = ut.calculate_CMA(bf)
+        fig3.add_trace(go.Line(y=bloodflow1["CMA"],name="CMA"))
+    # Aufgabe 3 
     if 'Mittelwert' in str(bloodflow_checkmarks):
+        global mean 
         mean = ut.calculate_mean(bf)
         fig3.add_hline(y=mean, line_dash="dot",annotation_text="Mittelwert: "+str(round(mean,2))+ " ml/s")
 
     if 'Show Limits' in str(bloodflow_checkmarks):
         mean = ut.calculate_mean(bf)
-        fig3.add_hrect(y0=mean*1.15, y1=mean*0.8, annotation_text="15% Limit", fillcolor="green", opacity=0.25, line_width=0 )
+        fig3.add_hrect(y0=mean*1.15, y1=mean*0.85, annotation_text="15% Limit", fillcolor="green", opacity=0.25, line_width=0 )
 
 
     return fig3
-   
+
+def alarm(value): 
+    bf = list_of_subjects[int(value)-1].subject_data 
+    sma=ut.calculate_SMA(bf,3)
+    mean=ut.calculate_mean(bf)
+    UpperLimit = 1.15 * mean
+    LowerLimit= 0.85 * mean
+    high_or_low = bf[(bf['SMA'] > UpperLimit) | (bf['SMA'] < LowerLimit)] 
+    
+    LegendName = "Dauer Kritischer Werte: " + str(high_or_low['SMA'].count()) +'s'
+    textfeld= html.Div( children= str(LegendName))
+    return textfeld
 
 if __name__ == '__main__':
     app.run_server(debug=True)

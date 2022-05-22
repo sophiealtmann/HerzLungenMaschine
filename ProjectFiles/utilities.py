@@ -54,6 +54,14 @@ def calculate_mean(df):
     mean=df["Blood Flow (ml/s)"].mean()
     
     return mean
+
+# SMA ist sinnvoll bei Signalen die mit der Zeit zusammenhängen. 
+# Weiters ist er bei Signalen sinnvoll, bei denen häufig unerwünschte Ausreißer vorkommen.
+# Er ist ungeeignet, wennn es darum geht ein Signal detailreich aufzuzeichnen.
+# Weiters ist er ungeeignet, wenn Lücken im Datensatz vorhanden sind, da diese die Werte verfälschen.
+    
+# Der Wert n gibt das Datenfenster an, über das der Moving Average berechnet wird.
+# Die Kurve verliert an Details, je höher der Wert für n ist.
 # %%
 
 
